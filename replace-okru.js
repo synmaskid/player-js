@@ -6,11 +6,12 @@
 
         if (!iframe.src) return;
 
-        if (iframe.src.includes("ok.ru")) {
+        if (iframe.src.match(/ok\.ru/i)) {
 
-            var match = iframe.src.match(/ok\.ru\/.*?(\d{8,})/i);
+            // lấy ID video từ mọi dạng link
+            var match = iframe.src.match(/ok\.ru\/(?:video|videoembed|video\/editor)\/(\d+)/i);
 
-            if (match) {
+            if (match && match[1]) {
 
                 iframe.src = "https://ssplay.net/ok/" + match[1];
 
