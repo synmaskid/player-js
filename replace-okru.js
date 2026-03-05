@@ -1,24 +1,50 @@
 (function () {
 
-    const iframes = document.querySelectorAll('iframe');
+function replaceOkru(iframe){
 
-    iframes.forEach(function (iframe) {
+    if (!iframe.src) return;
 
-        if (!iframe.src) return;
+    if (iframe.src.includes("ok.ru")) {
 
-        if (iframe.src.match(/ok\.ru/i)) {
+        var match = iframe.src.match(/ok\.ru\/.*?(\d{8,})/i);
 
-            // lấy ID video từ mọi dạng link
-            var match = iframe.src.match(/ok\.ru\/(?:video|videoembed|video\/editor)\/(\d+)/i);
+        if (match) {
 
-            if (match && match[1]) {
-
-                iframe.src = "https://ssplay.net/ok/" + match[1];
-
-            }
+            iframe.src = "https://ssplay.net/ok/" + match[1];
 
         }
 
+    }
+
+}
+
+/* chạy khi trang load */
+document.querySelectorAll("iframe").forEach(replaceOkru);
+
+/* theo dõi iframe mới được tạo */
+const observer = new MutationObserver(function(mutations){
+
+    mutations.forEach(function(mutation){
+
+        mutation.addedNodes.forEach(function(node){
+
+            if(node.tagName === "IFRAME"){
+                replaceOkru(node);
+            }
+
+            if(node.querySelectorAll){
+                node.querySelectorAll("iframe").forEach(replaceOkru);
+            }
+
+        });
+
     });
+
+});
+
+observer.observe(document.body,{
+    childList:true,
+    subtree:true
+});
 
 })();
