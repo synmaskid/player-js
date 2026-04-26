@@ -27,6 +27,12 @@ function render(){
   let episode = film.episodes[ep];
 
   let app = document.getElementById('app');
+
+if(!app){
+  app = document.createElement('div');
+  app.id = 'app';
+  document.body.appendChild(app);
+}
   app.innerHTML = `
     <h2>${film.title} - ${episode.name}</h2>
     <iframe src="${episode.server1}" width="100%" height="500"></iframe>
